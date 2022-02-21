@@ -3,16 +3,16 @@
 const fs = require("fs");
 const readline = require("readline");
 const fileName = process.argv[2];
-const fileTemplateNumber = /^-?\d+\.?\d*\s-?\d+\.?\d*\s-?\d+\.?\d*\n$/;
+const fileTemplate = /^-?\d+\.?\d*\s-?\d+\.?\d*\s-?\d+\.?\d*\n$/;
 const numberTemplate = /^-?\d+\.?\d*$/;
-const questionToUser = (rl, query) =>
+const question = (rl, query) =>
   new Promise((resolve) => {
     rl.question(query, (answer) => {
       resolve(answer);
     });
   });
 
-const findRootsOfQuadraticEquation = (a, b, c) => {
+const findRoots = (a, b, c) => {
   const d = b * b - 4 * a * c;
   if (d < 0) return [];
   if (d === 0) {
@@ -25,7 +25,7 @@ const findRootsOfQuadraticEquation = (a, b, c) => {
   }
 };
 
-const solveQuadraticEquation = (a, b, c) => {
+const solveEquation = (a, b, c) => {
   if (a === 0) throw new Error("a cannot be 0");
   const fixed = [a, b, c].map((val) => val.toFixed(1));
   const eq = `(${fixed[0]}) x^2 + (${fixed[1]}) x + (${fixed[2]}) = 0`;
@@ -41,7 +41,7 @@ const readNumFromRl = async (rl, strNum) => {
   let n;
   do {
     if (n) console.log(`Expected a valid real number, got "${n}" instead`);
-    n = await questionToUser(rl, `${strNum} = `);
+    n = await question(rl, `${strNum} = `);
   } while (!numberTemplate.test(n));
   return parseFloat(n);
 };
