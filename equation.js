@@ -32,7 +32,7 @@ const solve = (a, b, c) => {
 if (fileName) {
   fs.readFile(fileName, (err, data) => {
     if (err) {
-      if (err.code === 'ENOENT') throw new Error(`file ${filename} does not exist`);
+      if (err.code === 'ENOENT') throw new Error(`file ${fileName} does not exist`);
       throw err;
     }
     const file = data.toString();
@@ -41,4 +41,6 @@ if (fileName) {
     console.log({ coefs });
     solve(...coefs);
   });
+} else {
+
 }
