@@ -1,6 +1,6 @@
 'use strict';
 
-const solve = (a, b, c) => {
+const findRoots = (a, b, c) => {
   const d = b * b - 4 * a * c;
   if (d < 0) return [];
   if (d === 0) {
@@ -12,4 +12,3 @@ const solve = (a, b, c) => {
     return [x1, x2];
   }
 };
-
