@@ -1,8 +1,15 @@
 'use strict';
 
 const fs = require('fs');
+const readline = require('readline');
 const fileName = process.argv[2];
-const template = /^-?\d+\.?\d*\s-?\d+\.?\d*\s-?\d+\.?\d*\n/;
+const fileTemplate = /^-?\d+\.?\d*\s-?\d+\.?\d*\s-?\d+\.?\d*\n$/;
+const numberTemplate = /^-?\d+\.?\d*$/;
+const question = (rl, query) => new Promise((resolve) => {
+  rl.question(query, (answer) => {
+    resolve(answer);
+  });
+});
 
 const findRoots = (a, b, c) => {
   const d = b * b - 4 * a * c;
@@ -29,6 +36,15 @@ const solve = (a, b, c) => {
   });
 };
 
+const readNumber = async (rl, strNum) => {
+  let n;
+  do {
+    if (n) console.log(`Expected a valid real number, got "${n}" instead`);
+    n = await question(rl, `${strNum} = `);
+  } while (!numberTemplate.test(n));
+  return parseFloat(n);
+};
+
 if (fileName) {
   fs.readFile(fileName, (err, data) => {
     if (err) {
@@ -36,11 +52,23 @@ if (fileName) {
       throw err;
     }
     const file = data.toString();
-    if (!template.test(file)) throw new Error('invalid file format');
-    const coefs = file.trim().split(' ').map((value) => parseInt(value));
-    console.log({ coefs });
+    if (!fileTemplate.test(file)) throw new Error('invalid file format');
+    const coefs = file.trim().split(' ').map((value) => parseFloat(value));
     solve(...coefs);
   });
 } else {
-
+  const { stdin: input, stdout: output } = process;
+  const rl = readline.createInterface({ input, output });
+  const readNum = readNumber.bind(null, rl);
+  (async () => {
+    let a;
+    do {
+      if (a === 0) console.log('a cannot be 0');
+      a = await readNum('a');
+    } while (a === 0);
+    const b = await readNum('b');
+    const c = await readNum('c');
+    solve(a, b, c);
+    rl.close();
+  })();
 }
